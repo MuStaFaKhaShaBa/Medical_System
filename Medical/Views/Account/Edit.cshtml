@@ -1,0 +1,78 @@
+﻿@model Medical.Models.EditUserVM
+
+@{
+    ViewBag.ActiveItem = $"{Model.Role}s";
+}
+
+<div class="page-header w-100 border-start ps-2 border-3 border-primary mb-4">
+    <div class="">
+        <div class="page-title text-start fs-6 fw-bold">@Model.Role<span class="fw-normal text-muted ms-2">Edit</span></div>
+    </div>
+</div>
+<!-- contaner of form add clients -->
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header border-bottom-0">
+                    <h4 class="card-title">Edting Form</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" asp-controller="Account" enctype="multipart/form-data">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger" asp-validation-summary="All"></div>
+                        }
+                        <div class="d-flex flex-column gap-3">
+                            <div class="form-group">
+                                <label asp-for="Name" class="form-label mb-1">Name</label>
+                                <input asp-for="Name" class="form-control" placeholder="Enter name">
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="UserName" class="form-label mb-1">UserName</label>
+                                <input asp-for="UserName" class="form-control" placeholder="Enter User Name">
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PhoneNumber" class="form-label mb-1">Phone Number</label>
+                                <input asp-for="PhoneNumber" class="form-control" placeholder="Enter Phone Number">
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Email" class="form-label mb-1">E-mail</label>
+                                <input asp-for="Email" class="form-control" placeholder="Enter your Email">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NationalId" class="form-label mb-1">National ID</label>
+                                <input asp-for="NationalId" class="form-control" placeholder="Enter National ID">
+                                <span asp-validation-for="NationalId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group" id="Password-toggle">
+                                <label asp-for="Password" class="form-label mb-1">Password</label>
+                                <div class="input-group">
+                                    <a href="" class="input-group-text">
+                                        <i class="fe fe-eye-off" aria-hidden="true"></i>
+                                    </a>
+                                    <input asp-for="Password" class="form-control" type="password" placeholder="Password">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Image" class="form-label mb-1">Picture</label>
+                                <input asp-for="Image" class="form-control" type="file" accept=".jpg, .jpeg, .png" placeholder="Enter image">
+                                <span asp-validation-for="Image" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <button name="submit" class="btn btn-info btn-block mt-4" type="submit">Edit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Row -->
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    ViewBag.ActiveItem = "Home";
+
+}
+
+
+<div class="page-header w-100 border-start ps-2 border-3 border-primary mt-5">
+    <div class="">
+        <div class="page-title text-start fs-6 fw-bolder">Doctors<span class="fw-normal text-muted ms-2">Dashboard</span></div>
+    </div>
+</div>
+</div>
+
+<!-- contaner of form add clients -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="Index" asp-controller="" id="searchForm">
+                <div class="input-group mb-3">
+                    <input type="text"
+                           name="nationalid"
+                           class="form-control"
+                           placeholder="Search by National ID"
+                           aria-label="National ID"
+                           aria-describedby="button-addon2"
+                           required
+                           maxlength="14" />
+                    <button class="btn btn-primary" type="submit" id="button-addon2">
+                        Search
+                    </button>
+                    <button class="btn btn-secondary"
+                            type="button"
+                            onclick="resetForm()">
+                        Reset
+                    </button>
+                </div>
+            </form>
+            <div class="container-fluid">
+                <!-- Row -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Phone Number</th>
+                                                <th>E-mail</th>
+                                                <th>National ID</th>
+                                                <th>Picture</th>
+                                                <th>QR Code</th>
+                                                <th>Controls</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function resetForm() {
+        document.getElementById("searchForm").reset();
+        window.location.href = window.location.pathname; // Reload the page without query parameters
+    }
+</script>
+

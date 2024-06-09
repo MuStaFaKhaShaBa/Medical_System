@@ -1,0 +1,65 @@
+﻿@model ApplicationUserVM
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">User Profile</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label>Profile Picture:</label><br />
+                                <img src="@Model.ImageUrl" class="img-fluid" alt="Profile Picture" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label>QR Code:</label><br />
+                                <img src="@Model.QrCodeUrl" class="img-fluid" alt="QR Code" style="max-width:10rem;" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label>User Name:</label>
+                                <p class="form-control-static">@Model.UserName</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label>Email:</label>
+                                <p class="form-control-static">@Model.Email</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label>National ID:</label>
+                                <p class="form-control-static">@Model.NationalId</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label>Name:</label>
+                                <p class="form-control-static">@Model.Name</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label>Phone Number:</label>
+                                <p class="form-control-static">@Model.PhoneNumber</p>
+                            </div>
+                        </div>
+                       
+                        <div class="col-12">
+                            <a type="button" class="btn btn-warning" asp-controller="Account" asp-route-id="@Model.Id" asp-action="Edit">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
