@@ -18,7 +18,7 @@ namespace Medical.Data.Entities
 
         public string? ImagePath { get; set; }
 
-        public IList<PatientMedical>? PatientMedicals { get; set; }
+        public IList<PatientMedical>? Medicals { get; set; }
     }
 
     public class ApplicationUserConfig : IEntityTypeConfiguration<ApplicationUser>

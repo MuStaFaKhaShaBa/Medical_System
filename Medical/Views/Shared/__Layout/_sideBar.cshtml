@@ -1,7 +1,8 @@
 ﻿@using Medical.Data.Entities
 @using Microsoft.AspNetCore.Identity
- @inject SignInManager<ApplicationUser> _signManager;
- @inject IConfiguration _config
+@inject SignInManager<ApplicationUser> _signManager;
+@inject IConfiguration _config
+@model int
 
 <!-- Sidebar Start -->
 <aside class="left-sidebar">
@@ -29,34 +30,46 @@
                     </a>
                 </li>
 
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="sidebar-item">
+                        <a class="sidebar-link @(ViewBag.ActiveItem == "Admins" ? "active" : "")"
+                           asp-action="Index"
+                           asp-controller="Admins"
+                           aria-expanded="false">
+                            <span><i class="ti ti-users"></i></span>
+                            <span class="hide-menu" data-translate="Admins">Admins</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link @(ViewBag.ActiveItem == "Doctors" ? "active" : "")"
+                           asp-controller="Doctors"
+                           asp-action="Index"
+                           aria-expanded="false">
+                            <span><i class="ti ti-user"></i></span>
+                            <span class="hide-menu" data-translate="Doctors">Doctors</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link @(ViewBag.ActiveItem == "Patients" ? "active" : "")"
+                           asp-action="Index"
+                           asp-controller="Patients"
+                           aria-expanded="false">
+                            <span><i class="ti ti-user"></i></span>
+                            <span class="hide-menu" data-translate="Patients">Patients</span>
+                        </a>
+                    </li>
+                }
                 <li class="sidebar-item">
-                    <a class="sidebar-link @(ViewBag.ActiveItem == "Admins" ? "active" : "")"
-                       asp-action="Index"
-                       asp-controller="Admins"
+                    <a class="sidebar-link @(ViewBag.ActiveItem == "Profile" ? "active" : "")"
+                       asp-action="Profile"
+                       asp-controller="Account"
+                       asp-route-id="@Model"
                        aria-expanded="false">
-                        <span><i class="ti ti-users"></i></span>
-                        <span class="hide-menu" data-translate="Admins">Admins</span>
+                        <span><i class="ti ti-file-invoice"></i></span>
+                        <span class="hide-menu">Profile</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link @(ViewBag.ActiveItem == "Doctors" ? "active" : "")"
-                       asp-controller="Doctors"
-                       asp-action="Index"
-                       aria-expanded="false">
-                        <span><i class="ti ti-user"></i></span>
-                        <span class="hide-menu" data-translate="Doctors">Doctors</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link @(ViewBag.ActiveItem == "Patients" ? "active" : "")"
-                       asp-action="Index"
-                       asp-controller="Patients"
-                       aria-expanded="false">
-                        <span><i class="ti ti-user"></i></span>
-                        <span class="hide-menu" data-translate="Patients">Patients</span>
-                    </a>
-                </li>
-
             </ul>
         </nav>
         <!-- End Sidebar navigation -->

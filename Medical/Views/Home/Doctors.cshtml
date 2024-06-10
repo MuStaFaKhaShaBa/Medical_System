@@ -1,4 +1,7 @@
-﻿@{
+﻿@model IEnumerable<ApplicationUserVM>
+@inject IConfiguration config
+
+@{
     ViewData["Title"] = "Home Page";
     ViewBag.ActiveItem = "Home";
 
@@ -10,17 +13,16 @@
         <div class="page-title text-start fs-6 fw-bolder">Doctors<span class="fw-normal text-muted ms-2">Dashboard</span></div>
     </div>
 </div>
-</div>
 
 <!-- contaner of form add clients -->
 <div class="container mt-5">
     <div class="row">
         <div class="col-12">
-            <form asp-action="Index" asp-controller="" id="searchForm">
-                <div class="input-group mb-3">
+            <form asp-action="Search" asp-controller="Doctors" id="searchForm">
+                <div class="input-group bg-white mb-3">
                     <input type="text"
                            name="nationalid"
-                           class="form-control"
+                           class="form-control py-3"
                            placeholder="Search by National ID"
                            aria-label="National ID"
                            aria-describedby="button-addon2"
@@ -30,13 +32,19 @@
                         Search
                     </button>
                     <button class="btn btn-secondary"
-                            type="button"
-                            onclick="resetForm()">
+                            type="reset">
                         Reset
                     </button>
                 </div>
             </form>
-            <div class="container-fluid">
+
+
+            @{
+                var path = $"{config["baseUrl"]}/{config["images:load"]}/";
+            }
+
+            @if (Model != null && Model.Any())
+            {
                 <!-- Row -->
                 <div class="row">
                     <div class="col-12">
@@ -46,23 +54,49 @@
                                     <table class="table table-bordered" id="responsive">
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Phone Number</th>
-                                                <th>E-mail</th>
-                                                <th>National ID</th>
-                                                <th>Picture</th>
-                                                <th>QR Code</th>
-                                                <th>Controls</th>
+                                                <th class="text-nowrap">Name</th>
+                                                <th class="text-nowrap">Phone Number</th>
+                                                <th class="text-nowrap">E-mail</th>
+                                                <th class="text-nowrap">National ID</th>
+                                                <th class="text-nowrap">Picture</th>
+                                                <th class="text-nowrap">QR Code</th>
+                                                <th class="text-nowrap">Controls</th>
                                             </tr>
                                         </thead>
-                                        <tbody></tbody>
+                                        <tbody>
+                                            @foreach (var patient in Model)
+                                            {
+                                                <tr class="text-center">
+                                                    <td class="p-1 align-middle">@patient.Id</td>
+                                                    <td class="p-1 align-middle">@patient.Name</td>
+                                                    <td class="p-1 align-middle">@patient.PhoneNumber</td>
+                                                    <td class="p-1 align-middle">@patient.Email</td>
+                                                    <td class="p-4 align-middle text-center" style="max-width: 4rem;"><img class="img-fluid" src="@path@patient.ImageUrl" /></td>
+                                                    <td class="p-4 align-middle text-center" style="max-width: 6rem;"><img class="img-fluid" src="@path@patient.QrCodeUrl" /></td>
+                                                    <td class="p-1 align-middle">
+                                                        <div class=" d-flex gap-2 align-items-center">
+                                                            <a type="button" class="btn btn-dark text-nowrap" asp-controller="PatientMedicals" asp-route-patientId="@patient.Id" asp-action="Index">Medical History</a>
+                                                            <a type="button" class="btn btn-outline-dark" asp-controller="Account" asp-route-id="@patient.Id" asp-action="Profile">Profile</a>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+            else if (!string.IsNullOrEmpty(ViewBag.patientNationalID))
+            {
+                <div class="alert alert-warning">
+                    No patients found with National ID: @ViewBag.patientNationalID
+                </div>
+            }
+
         </div>
     </div>
 

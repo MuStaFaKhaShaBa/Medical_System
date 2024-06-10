@@ -57,6 +57,13 @@ namespace Medical.Controllers
             return View(loginVM);
         }
 
+        public async Task<ActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction("Login");
+        }
+
         public IActionResult Create(UserRole? userRole)
         {
             return View(new CreateUserVM() { Role = userRole ?? UserRole.Patient });

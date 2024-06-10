@@ -31,7 +31,7 @@ namespace Medical.Specifications.ApplicationUser_
                         (string.IsNullOrEmpty(specs.Search.PhoneNumber) || string.IsNullOrEmpty(x.PhoneNumber) || x.PhoneNumber.Contains(specs.Search.PhoneNumber));
 
                 if (specs.Navigations != null && specs.Navigations.EnableMedicalsReports)
-                    AddInclude(x => x.PatientMedicals);
+                    AddInclude(x => x.Medicals);
 
                 if(specs.Pagination != null)
                 {

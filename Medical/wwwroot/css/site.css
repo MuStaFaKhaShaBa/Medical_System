@@ -1,0 +1,15 @@
+.image-placeholder {
+    width: 7rem;
+    height: 7rem;
+}
+@media screen and (max-width:768px){
+    .image-placeholder {
+        width: 5rem;
+        height: 5rem;
+    }
+}
+
+
+.card-header .nav .active{
+    border-bottom: 3px solid var(--bs-primary); 
+}

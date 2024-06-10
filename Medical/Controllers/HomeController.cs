@@ -15,12 +15,12 @@ namespace Medical.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationUserRepo _repo;
+        private readonly ApplicationUserRepo _userRepo;
 
         public HomeController(ILogger<HomeController> logger, ApplicationUserRepo repo)
         {
             _logger = logger;
-            _repo = repo;
+            _userRepo = repo;
         }
 
         public async Task<ActionResult> Index()
@@ -30,11 +30,11 @@ namespace Medical.Controllers
 
             };
 
-            var users = await _repo.GetAllAsync(new ApplicationUserSpecifications(specsProperties));
-            var user = users?.FirstOrDefault(u => u.UserName == User.Identity.Name);
-
             if (User.IsInRole("Admin"))
             {
+
+                var users = await _userRepo.GetAllAsync(new ApplicationUserSpecifications(specsProperties));
+                var user = users?.FirstOrDefault(u => u.UserName == User.Identity.Name);
 
                 var adminModel = new HomeAdminsVM()
                 {
@@ -48,14 +48,24 @@ namespace Medical.Controllers
             }
             else if (User.IsInRole("Doctor"))
             {
-                return View();
+                return View("Doctors");
             }
             else if (User.IsInRole("Patient"))
             {
+                var specs = new BaseGlobalSpecs<ApplicationUserNavigations, ApplicationUserSearch>()
+                {
+                    Search = new() { UserName = User.Identity.Name },
+                    Navigations = new() { EnableMedicalsReports = true }
+                };
 
+                var patient = await _userRepo.GetAsync(new(specs));
+
+                if (patient == null) { NotFound(); }
+
+                return View("Patients",patient);
             }
 
-            return View();
+            return NotFound();
         }
 
         public IActionResult Privacy()

@@ -57,9 +57,14 @@
                                             <td class="p-1 align-middle">@PM.Type</td>
                                             <td class="p-1 align-middle">@PM.Text</td>
                                             <td class="p-1 align-middle">
-                                                <form method="get" action="@path@PM.FileName">
-                                                    <button class="btn btn-primary" type="submit">Download File!</button>
-                                                </form>
+                                                @if (!string.IsNullOrEmpty(PM.FileName))
+                                                {
+                                                    <a href="@path@PM.FileName" class="btn btn-primary" download="@PM.Type">Download File!</a>
+                                                }
+                                                else
+                                                {
+                                                    <span>None</span>
+                                                }
                                             </td>
                                             <td class="p-1 align-middle">
                                                 <a type="button" class="btn btn-warning" asp-controller="Account" asp-route-id="@PM.Id" asp-action="Edit">Edit</a>

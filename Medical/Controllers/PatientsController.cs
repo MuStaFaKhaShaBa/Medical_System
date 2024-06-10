@@ -30,5 +30,15 @@ namespace Medical.Controllers
             return View(entities);
         }
 
+        public async Task<ActionResult> Profile(int id)
+        {
+            var patient = await _userRepo.GetByIdAsync(id);
+
+            if (patient == null) { NotFound(); }
+
+            var patientModel = new ApplicationUserVM(patient);
+
+            return View(patientModel);
+        }
     }
 }
