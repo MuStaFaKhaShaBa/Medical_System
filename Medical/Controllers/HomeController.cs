@@ -30,11 +30,11 @@ namespace Medical.Controllers
 
             };
 
-            var users = await _repo.GetAllAsync(new ApplicationUserSpecifications(specsProperties));
-            var user = users?.FirstOrDefault(u => u.UserName == User.Identity.Name);
-
             if (User.IsInRole("Admin"))
             {
+
+            var users = await _repo.GetAllAsync(new ApplicationUserSpecifications(specsProperties));
+            var user = users?.FirstOrDefault(u => u.UserName == User.Identity.Name);
 
                 var adminModel = new HomeAdminsVM()
                 {
@@ -48,7 +48,7 @@ namespace Medical.Controllers
             }
             else if (User.IsInRole("Doctor"))
             {
-                return View();
+                return View("Doctors");
             }
             else if (User.IsInRole("Patient"))
             {

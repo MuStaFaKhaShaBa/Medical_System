@@ -22,9 +22,9 @@ namespace Medical.Data
             // Seed users
             var users = new[]
             {
-                new { UserName = "admin", Email = "admin@example.com", Name = "Admin User", NationalId = "1111111111", PhoneNumber = "1234567890", Role = UserRole.Admin,Password = "Admin123!" },
-                new { UserName = "doctor", Email = "doctor@example.com", Name = "Doctor User", NationalId = "2222222222", PhoneNumber = "1234567891", Role = UserRole.Doctor, Password = "Doctor123!" },
-                new { UserName = "patient", Email = "patient@example.com", Name = "Patient User", NationalId = "3333333333", PhoneNumber = "1234567892", Role = UserRole.Patient, Password = "Patient123!" }
+                new { UserName = "admin", Email = "admin@example.com", Name = "Admin User", NationalId = "11111111111111", PhoneNumber = "1234567890", Role = UserRole.Admin,Password = "Admin123!" },
+                new { UserName = "doctor", Email = "doctor@example.com", Name = "Doctor User", NationalId = "22222222222222", PhoneNumber = "1234567891", Role = UserRole.Doctor, Password = "Doctor123!" },
+                new { UserName = "patient", Email = "patient@example.com", Name = "Patient User", NationalId = "33333333333333", PhoneNumber = "1234567892", Role = UserRole.Patient, Password = "Patient123!" }
             };
 
             foreach (var userInfo in users)

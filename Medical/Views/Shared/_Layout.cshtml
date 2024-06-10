@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Medical.Repositories
+@using Medical.Specifications.ApplicationUser_
+@inject ApplicationUserRepo _repo
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,6 +14,9 @@
     <link href="~/css/site.css" rel="stylesheet" />
 </head>
 <body>
+    @{
+        var user = await _repo.GetAsync(new ApplicationUserSpecifications(new() { Search = new() { UserName = User.Identity.Name } }));
+    }
     <!--  Body Wrapper -->
     <div class="page-wrapper"
          id="main-wrapper"
@@ -24,7 +31,7 @@
         <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
-            <partial name="__Layout/_header" />
+            <partial name="__Layout/_header" model="@user" />
             <!--  Header End -->
 
             <div class="container-fluid min-vh-100 bg-light">
