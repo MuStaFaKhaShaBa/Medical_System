@@ -19,7 +19,7 @@ namespace Medical
 
             var app = builder.Build();
 
-           await app.AddAppConfig();
+            await app.AddAppConfig();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
