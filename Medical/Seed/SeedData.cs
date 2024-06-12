@@ -59,7 +59,7 @@ namespace Medical.Data
         private static byte[] GenerateQrCodeImage(int userId, string baseUrl)
         {
             // Generate QR code
-            string url = $"{baseUrl}/Account/Prpfile/{userId}";
+            string url = $"{baseUrl}/Account/Profile/{userId}";
             using QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
             using BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
