@@ -4,6 +4,8 @@
     var path = $"{_config["baseUrl"]}/{_config["images:load"]}/";
     var pathFiles = $"{_config["baseUrl"]}/{_config["reports:load"]}/";
     ViewBag.ActiveItem = "Home";
+    ViewData["Title"] = "Home";
+
 }
 <div class="container-fluid main-content">
     <div class="row">
@@ -33,7 +35,10 @@
                         </div>
                     </div>
                     <div class="col-8">
-                        <h4 class="profw-bold d-flex align-items-center">@Model.Name<i class="ti ti-circle-check ms-1 fs-14"></i></h4>
+                        <h4 class="fw-bolder d-flex align-items-center gap-2">
+                            @Model.Name
+                            <i class="ti ti-circle-check text-success fs-2"></i>
+                        </h4>
                         <div class="d-flex align-items-center mb-2">
                             <i class="ti ti-inbox me-2"></i>
                             <div class="h6 mb-0">@Model.Email</div>
