@@ -61,8 +61,8 @@
                                             <td class="p-1 align-middle">@admin.Name</td>
                                             <td class="p-1 align-middle">@admin.PhoneNumber</td>
                                             <td class="p-1 align-middle">@admin.Email</td>
-                                            <td class="p-4 align-middle text-center" style="max-width: 4rem;"><img class="img-fluid" src="@path@admin.ImagePath" /></td>
-                                            <td class="p-4 align-middle text-center" style="max-width: 6rem;"><img class="img-fluid" src="@path@admin.QR" /></td>
+                                            <td class="p-1 align-middle text-center" style="max-width: 4rem;"><img class="img-fluid" src="@path@admin.ImagePath" /></td>
+                                            <td class="p-1 align-middle text-center" style="max-width: 6rem;"><img class="img-fluid" src="@path@admin.QR" /></td>
                                             <td class="p-1 align-middle">
                                                 <a type="button" class="btn btn-warning" asp-controller="Account" asp-route-id="@admin.Id" asp-action="Edit">Edit</a>
                                                 <button type="button" class="btn btn-danger" data-type="delete" asp-controller="Account" asp-action="Delete" asp-route-id="@admin.Id">Delete</button>
