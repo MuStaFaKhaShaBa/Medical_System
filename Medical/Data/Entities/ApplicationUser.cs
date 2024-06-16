@@ -18,6 +18,14 @@ namespace Medical.Data.Entities
 
         public string? ImagePath { get; set; }
 
+        public DateOnly? BirthDate { get; set; }
+        public Gender Gender { get; set; }
+        public string? Address { get; set; }
+        public string? Specification { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
         public IList<PatientMedical>? Medicals { get; set; }
     }
 
@@ -27,5 +35,11 @@ namespace Medical.Data.Entities
         {
             builder.HasIndex(x => x.NationalId).IsUnique();
         }
+    }
+
+    public enum Gender
+    {
+        male,
+        femail
     }
 }

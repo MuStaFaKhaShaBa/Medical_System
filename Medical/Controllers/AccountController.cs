@@ -5,6 +5,7 @@ using Medical.Data.Entities;
 using Medical.Models;
 using Medical.Helper;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Medical.Controllers
 {
@@ -91,7 +92,12 @@ namespace Medical.Controllers
                         NationalId = createUserVM.NationalId,
                         Name = createUserVM.Name,
                         PhoneNumber = createUserVM.PhoneNumber,
-                        UserRole = createUserVM.Role
+                        UserRole = createUserVM.Role,
+                        Address = createUserVM.Address,
+                        BirthDate = createUserVM.BirthDate,
+                        Gender = createUserVM.Gender,
+                        Specification = createUserVM.Specification, 
+                        
                     };
 
                     var result = await _userManager.CreateAsync(user, createUserVM.Password);
@@ -130,7 +136,7 @@ namespace Medical.Controllers
                         }
                     }
                 }
-                catch (DbUpdateException dbEx)
+                catch (DbUpdateException)
                 {
                     // 2627 is the SQL Server error code for a unique constraint violation (duplicate key)
                     ModelState.AddModelError("", "A user with this information already exists.");
@@ -174,7 +180,12 @@ namespace Medical.Controllers
                     NationalId = user.NationalId,
                     PhoneNumber = user.PhoneNumber,
                     Role = user.UserRole,
-                    UserName = user.UserName
+                    UserName = user.UserName,
+                    Address = user.Address,
+                    BirthDate = user.BirthDate,
+                    Gender = user.Gender,
+                    Specification = user.Specification,
+
                 };
                 return View(model);
             }
@@ -204,7 +215,12 @@ namespace Medical.Controllers
                     user.NationalId = model.NationalId;
                     user.PhoneNumber = model.PhoneNumber;
                     user.UserName = model.UserName;
-
+                    user.Address = model.Address;
+                    user.BirthDate = model.BirthDate;
+                    user.Gender = model.Gender;
+                    user.Specification = model.Specification; 
+                        
+                    user.UpdatedAt = DateTime.UtcNow;
 
                     if (model.Image != null)
                     {
@@ -323,20 +339,11 @@ namespace Medical.Controllers
             {
                 return NotFound();
             }
+            if (user.UserRole == UserRole.Patient)
+                return RedirectToAction(nameof(PatientsController.Profile), "Patients", new { patientId = user.Id });
 
-            var path = $"{_configuration["baseUrl"]}/{_configuration["images:load"]}/";
 
-            var model = new ApplicationUserVM
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                NationalId = user.NationalId,
-                Name = user.Name,
-                PhoneNumber = user.PhoneNumber,
-                ImageUrl = path + user.ImagePath,
-                QrCodeUrl = path + user.QR
-            };
+            var model = new ApplicationUserVM(user);
 
             return View(model);
         }

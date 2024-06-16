@@ -3,9 +3,12 @@ using Medical.Helper;
 using Medical.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using QRCoder;
+using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Medical.Data
@@ -22,9 +25,51 @@ namespace Medical.Data
             // Seed users
             var users = new[]
             {
-                new { UserName = "admin", Email = "admin@example.com", Name = "Admin User", NationalId = "11111111111111", PhoneNumber = "1234567890", Role = UserRole.Admin,Password = "Admin123!" },
-                new { UserName = "doctor", Email = "doctor@example.com", Name = "Doctor User", NationalId = "22222222222222", PhoneNumber = "1234567891", Role = UserRole.Doctor, Password = "Doctor123!" },
-                new { UserName = "patient", Email = "patient@example.com", Name = "Patient User", NationalId = "33333333333333", PhoneNumber = "1234567892", Role = UserRole.Patient, Password = "Patient123!" }
+                new
+                {
+                    UserName = "admin",
+                    Email = "admin@example.com",
+                    Name = "Admin User",
+                    NationalId = "11111111111111",
+                    PhoneNumber = "1234567890",
+                    Role = UserRole.Admin,
+                    Password = "Admin123!",
+                    Gender = Gender.male,
+                    Address = "123 Admin St.",
+                    Specification = "Administrator",
+                    BirthDate = new DateOnly(1980, 1, 1),
+                    ImagePath = "/images/admin.png"
+                },
+                new
+                {
+                    UserName = "doctor",
+                    Email = "doctor@example.com",
+                    Name = "Doctor User",
+                    NationalId = "22222222222222",
+                    PhoneNumber = "1234567891",
+                    Role = UserRole.Doctor,
+                    Password = "Doctor123!",
+                    Gender = Gender.male,
+                    Address = "456 Doctor Ave.",
+                    Specification = "General Practitioner",
+                    BirthDate = new DateOnly(1985, 5, 15),
+                    ImagePath = "/images/doctor.png"
+                },
+                new
+                {
+                    UserName = "patient",
+                    Email = "patient@example.com",
+                    Name = "Patient User",
+                    NationalId = "33333333333333",
+                    PhoneNumber = "1234567892",
+                    Role = UserRole.Patient,
+                    Password = "Patient123!",
+                    Gender = Gender.femail,
+                    Address = "789 Patient Blvd.",
+                    Specification = "N/A",
+                    BirthDate = new DateOnly(1990, 8, 25),
+                    ImagePath = "/images/patient.png"
+                }
             };
 
             foreach (var userInfo in users)
@@ -39,6 +84,13 @@ namespace Medical.Data
                         NationalId = userInfo.NationalId,
                         PhoneNumber = userInfo.PhoneNumber,
                         UserRole = userInfo.Role,
+                        Gender = userInfo.Gender,
+                        Address = userInfo.Address,
+                        Specification = userInfo.Specification,
+                        BirthDate = userInfo.BirthDate,
+                        ImagePath = userInfo.ImagePath,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
                     };
 
                     var result = await userManager.CreateAsync(user, userInfo.Password);
@@ -68,7 +120,5 @@ namespace Medical.Data
             // Return the byte array of the QR code image
             return qrCodeImageBytes;
         }
-
-
     }
 }

@@ -40,8 +40,10 @@
                                 <tr class="text-center">
                                     <th>ID</th>
                                     <th>Type</th>
-                                    <th>Text</th>
+                                    <th style="max-width: 10rem;">Text</th>
                                     <th>File</th>
+                                    <th>Created At</th>
+                                    <th>Last Updated At</th>
                                     <th>Controls</th>
                                 </tr>
                             </thead>
@@ -56,7 +58,9 @@
                                         <tr class="text-center">
                                             <td class="p-1 align-middle">@PM.Id</td>
                                             <td class="p-1 align-middle">@PM.Type</td>
-                                            <td class="p-1 align-middle">@PM.Text</td>
+                                            <td class="element-tooltip p-1 align-middle overflow-hidden" style="max-width: 10rem; text-overflow:ellipsis" title="@PM.Text">
+                                                @PM.Text
+                                            </td>
                                             <td class="p-1 align-middle">
                                                 @if (!string.IsNullOrEmpty(PM.FileName))
                                                 {
@@ -67,9 +71,11 @@
                                                     <span>None</span>
                                                 }
                                             </td>
+                                            <td class="p-1 align-middle">@PM.CreatedAt.ToString("F")</td>
+                                            <td class="p-1 align-middle">@PM.UpdatedAt.ToString("F")</td>
                                             <td class="p-1 align-middle">
-                                                <a type="button" class="btn btn-warning" asp-controller="Account" asp-route-id="@PM.Id" asp-action="Edit">Edit</a>
-                                                <button type="button" class="btn btn-danger" data-type="delete" asp-controller="Account" asp-action="Delete" asp-route-id="@PM.Id">Delete</button>
+                                                <a type="button" class="btn btn-warning" asp-route-id="@PM.Id" asp-action="Edit">Edit</a>
+                                                <button type="button" class="btn btn-danger" data-type="delete" asp-action="Delete" asp-route-id="@PM.Id">Delete</button>
                                             </td>
                                         </tr>
                                     }

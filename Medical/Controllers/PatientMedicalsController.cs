@@ -7,6 +7,10 @@ using Medical.Models;
 using Medical.Data.Entities;
 using Medical.Helper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Medical.Controllers
 {
@@ -24,7 +28,7 @@ namespace Medical.Controllers
         }
 
         // GET: PatientMedicalsController
-        public async Task<ActionResult> Index(int patientId, BaseGlobalSpecs<PatientMedicalNavigations, PatientMedicalSearch>? specs)
+        public async Task<IActionResult> Index(int patientId, BaseGlobalSpecs<PatientMedicalNavigations, PatientMedicalSearch>? specs)
         {
             specs ??= new();
             specs.Search ??= new() { PatientId = patientId };
@@ -37,93 +41,176 @@ namespace Medical.Controllers
 
         [Authorize(Roles = "Admin,Doctor")]
         // GET: PatientMedicalsController/Create
-        public async Task<ActionResult> Create(int patientId)
+        public async Task<IActionResult> Create(int patientId)
         {
             var user = await _applicationUserRepo.GetByIdAsync(patientId);
-            return View(new PatientMedicalCreateVM() { PatientId = patientId, Patient = user });
+            return View(new PatientMedicalCreateVM { PatientId = patientId, Patient = user });
         }
 
-        // POST: PatientMedicalsController/Create
         [Authorize(Roles = "Admin,Doctor")]
+        // POST: PatientMedicalsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(PatientMedicalCreateVM model)
+        public async Task<IActionResult> Create(PatientMedicalCreateVM model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             try
             {
-                if (ModelState.IsValid)
+                var patientMedical = new PatientMedical
                 {
-                    var patientMedical = new PatientMedical
-                    {
-                        PatientId = model.PatientId,
-                        Type = model.Type,
-                        Text = model.Text,
-                    };
+                    PatientId = model.PatientId,
+                    Type = model.Type,
+                    Text = model.Text,
+                };
 
-                    if (model.File != null)
-                    {
-                        var fileName = Path.GetFileName(model.File.FileName);
-                        var folderPath = _configuration["reports:upload"];
+                if (model.File != null)
+                {
+                    var fileName = GetValidatedFileName(model.File.FileName);
+                    var folderPath = _configuration["reports:upload"];
 
-                        patientMedical.FileName = DocumentSettings.SaveFile(fileName, model.File, folderPath);
-                    }
-
-                    await _patientMedicalRepo.AddAsync(patientMedical);
-
-                    if (await _patientMedicalRepo.CommitAsync() > 0)
-                        return RedirectToAction(nameof(Index), new {patientId = model.PatientId });
-
-                    ModelState.AddModelError("", "Something Went Wrong");
+                    patientMedical.FileName = DocumentSettings.SaveFile(fileName, model.File, folderPath);
                 }
 
+                await _patientMedicalRepo.AddAsync(patientMedical);
+
+                if (await _patientMedicalRepo.CommitAsync() > 0)
+                {
+                    TempData["Message"] = $"Report {patientMedical.Type}, Added Successfully";
+                    return RedirectToAction(nameof(Index), new { patientId = model.PatientId });
+                }
+
+                ModelState.AddModelError("", "Data Not Valid");
                 return View(model);
             }
-            catch
+            catch (Exception ex)
             {
-                // Log the error here
+                // Log the error (uncomment the line below after adding a logger)
+                // _logger.LogError(ex, "Error occurred while creating a patient medical record.");
+                ModelState.AddModelError("", "Something Went Wrong");
                 return View(model);
             }
         }
 
-
-        // GET: PatientMedicalsController/Edit/5
-        public ActionResult Edit(int id)
+        private string GetValidatedFileName(string fileName)
         {
-            return View();
+            return Path.GetFileName(fileName.Length > 200 ? fileName.Substring(0, 200) : fileName);
         }
 
+        [Authorize(Roles = "Admin,Doctor")]
+        // GET: PatientMedicalsController/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var patientMedical = await _patientMedicalRepo.GetAsync(new(new() { Search = new() { Id = id }, Navigations = new() { EnablePatient = true } }));
+            if (patientMedical == null)
+            {
+                return NotFound();
+            }
+
+            var model = new PatientMedicalEditVM
+            {
+                Id = patientMedical.Id,
+                Patient = patientMedical.Patient,
+                PatientId = patientMedical.PatientId,
+                Type = patientMedical.Type,
+                Text = patientMedical.Text,
+                FileName = patientMedical.FileName
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin,Doctor")]
         // POST: PatientMedicalsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, PatientMedicalEditVM model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var patientMedical = await _patientMedicalRepo.GetByIdAsync(id);
+                if (patientMedical == null)
+                {
+                    return NotFound();
+                }
+
+                patientMedical.Type = model.Type;
+                patientMedical.Text = model.Text;
+                patientMedical.UpdatedAt = DateTime.UtcNow;
+
+                if (model.File != null)
+                {
+                    var fileName = GetValidatedFileName(model.File.FileName);
+                    var folderPath = _configuration["reports:upload"];
+
+                    if (!string.IsNullOrEmpty(patientMedical.FileName))
+                        DocumentSettings.RemoveFile(Path.Combine(folderPath, patientMedical.FileName));
+
+                    patientMedical.FileName = DocumentSettings.SaveFile(fileName, model.File, folderPath);
+                }
+
+                _patientMedicalRepo.Update(patientMedical);
+
+                if (await _patientMedicalRepo.CommitAsync() > 0)
+                {
+                    TempData["Message"] = $"Report {patientMedical.Type}, Updated Successfully";
+                    return RedirectToAction(nameof(Index), new { patientId = model.PatientId });
+                }
+
+                ModelState.AddModelError("", "Data Not Valid");
+                return View(model);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                // Log the error (uncomment the line below after adding a logger)
+                // _logger.LogError(ex, "Error occurred while editing a patient medical record.");
+                ModelState.AddModelError("", "Something Went Wrong");
+                return View(model);
             }
         }
 
-        // GET: PatientMedicalsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
+        [Authorize(Roles = "Admin,Doctor")]
         // POST: PatientMedicalsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var patientMedical = await _patientMedicalRepo.GetByIdAsync(id);
+                if (patientMedical == null)
+                {
+                    return NotFound();
+                }
+
+                _patientMedicalRepo.Delete(patientMedical);
+
+                if (await _patientMedicalRepo.CommitAsync() > 0)
+                {
+                    if (!string.IsNullOrEmpty(patientMedical.FileName))
+                    {
+                        var folderPath = _configuration["reports:upload"];
+                        DocumentSettings.RemoveFile(Path.Combine(folderPath, patientMedical.FileName));
+                    }
+                    TempData["Message"] = $"Report {patientMedical.Type}, Deleted Successfully";
+                    return RedirectToAction(nameof(Index), new { patientId = patientMedical.PatientId });
+                }
+
+                ModelState.AddModelError("", "Data Not Valid");
+                return View(patientMedical);
             }
-            catch
+            catch (Exception ex)
             {
+                // Log the error (uncomment the line below after adding a logger)
+                // _logger.LogError(ex, "Error occurred while deleting a patient medical record.");
+                ModelState.AddModelError("", "Something Went Wrong");
                 return View();
             }
         }

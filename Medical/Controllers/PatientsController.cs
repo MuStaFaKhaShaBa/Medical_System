@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Medical.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class PatientsController : Controller
     {
         private readonly ApplicationUserRepo _userRepo;
@@ -20,6 +19,7 @@ namespace Medical.Controllers
             _patientMedicalRepo = patientMedicalRepo;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Index(BaseGlobalSpecs<ApplicationUserNavigations, ApplicationUserSearch> specs)
         {
             specs.Search ??= new() { UserRole = UserRole.Patient };
@@ -30,13 +30,17 @@ namespace Medical.Controllers
             return View(entities);
         }
 
-        public async Task<ActionResult> Profile(int id)
+        [AllowAnonymous]
+        public async Task<ActionResult> Profile(int patientId)
         {
-            var patient = await _userRepo.GetByIdAsync(id);
+            var patient = await _userRepo.GetByIdAsync(patientId);
 
             if (patient == null) { NotFound(); }
 
-            var patientModel = new ApplicationUserVM(patient);
+            var medicals = await _patientMedicalRepo.GetAllAsync(new(
+                new() { Search = new() { Type = "Disease" }}));
+
+            var patientModel = new PatientUserVM(patient, medicals);
 
             return View(patientModel);
         }

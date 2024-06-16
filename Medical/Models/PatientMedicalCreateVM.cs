@@ -15,4 +15,9 @@ namespace Medical.Models
         public string? Text { get; set; }
         public IFormFile? File { get; set; }
     }
+
+    public class PatientMedicalEditVM : PatientMedicalCreateVM
+    {
+        public string? FileName { get; set; }
+    }
 }

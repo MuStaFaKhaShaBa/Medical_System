@@ -60,6 +60,8 @@
                                             <th class="text-nowrap">National ID</th>
                                             <th class="text-nowrap">Picture</th>
                                             <th class="text-nowrap">QR Code</th>
+                                            <th class="text-nowrap">Created At</th>
+                                            <th class="text-nowrap">Last Updated At</th>
                                             <th class="text-nowrap">Controls</th>
                                         </tr>
                                     </thead>
@@ -74,10 +76,13 @@
                                                 <td class="p-1 align-middle">@patient.NationalId</td>
                                                 <td class="p-1 align-middle text-center" style="max-width: 4rem;"><img class="img-fluid" src="@path@patient.ImageUrl" /></td>
                                                 <td class="p-1 align-middle text-center" style="max-width: 6rem;"><img class="img-fluid" src="@path@patient.QrCodeUrl" /></td>
+                                                <td class="p-1 align-middle text-nowrap">@patient.CreatedAt.ToString("F")</td>
+                                                <td class="p-1 align-middle text-nowrap">@patient.UpdatedAt.ToString("F")</td>
+
                                                 <td class="p-1 align-middle">
                                                     <div class=" d-flex gap-2 align-items-center">
-                                                        <a type="button" class="btn btn-dark text-nowrap" asp-controller="PatientMedicals" asp-route-patientId="@patient.Id" asp-action="Index">Medical History</a>
-                                                        <a type="button" class="btn btn-outline-dark" asp-controller="Account" asp-route-id="@patient.Id" asp-action="Profile">Profile</a>
+                                                        <a type="button" class="btn btn-dark text-nowrap" target="_blank" asp-controller="PatientMedicals" asp-route-patientId="@patient.Id" asp-action="Index">Medical History</a>
+                                                        <a type="button" class="btn btn-outline-dark" target="_blank" asp-controller="Account" asp-route-id="@patient.Id" asp-action="Profile">Profile</a>
 
                                                     </div>
                                                 </td>

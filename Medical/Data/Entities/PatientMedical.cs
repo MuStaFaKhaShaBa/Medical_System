@@ -19,5 +19,9 @@ namespace Medical.Data.Entities
 
         public string? Text { get; set; }
         public string? FileName { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
     }
 }

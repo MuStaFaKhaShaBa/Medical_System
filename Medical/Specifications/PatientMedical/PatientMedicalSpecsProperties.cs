@@ -12,7 +12,7 @@ namespace Medical.Specifications.PatientMedical_
         /// Gets or sets a value indicating whether Patient should be included.
         /// </summary>
         [Display(Name = "Enable Patient")]
-        public bool EnablePatient { get; set; }
+        public bool EnablePatient { get; set; } = false;
     }
 
     /// <summary>
