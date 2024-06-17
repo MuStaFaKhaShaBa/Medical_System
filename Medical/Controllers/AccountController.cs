@@ -6,6 +6,7 @@ using Medical.Models;
 using Medical.Helper;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Medical.Controllers
 {
@@ -65,11 +66,13 @@ namespace Medical.Controllers
             return RedirectToAction("Login");
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(UserRole? userRole)
         {
             return View(new CreateUserVM() { Role = userRole ?? UserRole.Patient });
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateUserVM createUserVM)
@@ -163,6 +166,8 @@ namespace Medical.Controllers
             return qrCodeImageBytes;
         }
 
+        [Authorize(Roles = "Admin")]
+
         public async Task<ActionResult> Edit(int id)
         {
             try
@@ -198,6 +203,8 @@ namespace Medical.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(int id, EditUserVM model)
         {
             if (ModelState.IsValid)
@@ -284,6 +291,7 @@ namespace Medical.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             try

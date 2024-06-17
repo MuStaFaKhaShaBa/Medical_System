@@ -23,18 +23,19 @@ namespace Medical.Controllers
             _userRepo = repo;
         }
 
+        [AllowAnonymous]
+        public IActionResult Ads() =>View();
+        
+        [AllowAnonymous]
+        public new ActionResult NotFound() =>View();
+
+        [Authorize]
         public async Task<ActionResult> Index()
         {
-            var specsProperties = new BaseGlobalSpecs<ApplicationUserNavigations, ApplicationUserSearch>()
-            {
-
-            };
-
             if (User.IsInRole("Admin"))
             {
-
-                var users = await _userRepo.GetAllAsync(new ApplicationUserSpecifications(specsProperties));
-                var user = users?.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                var users = await _userRepo.GetAllAsync(new ApplicationUserSpecifications(new()));
+                var user = users?.FirstOrDefault(u => u.UserName == User.Identity?.Name);
 
                 var adminModel = new HomeAdminsVM()
                 {

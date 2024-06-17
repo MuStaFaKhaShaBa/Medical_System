@@ -31,7 +31,12 @@
                             <img src="@(!string.IsNullOrEmpty(Model.QrCodeUrl)?$"{pathImages}{Model.QrCodeUrl}":"")" class="img-fluid" alt="QR Code" style="max-width:10rem;" />
                         </div>
                     </div>
-
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <p class="form-control-static fw-bolder">@Model.Name</p>
+                        </div>
+                    </div>
                     <div class="col-md-6 mb-3">
                         <div class="form-group">
                             <label>User Name:</label>
@@ -48,12 +53,6 @@
                         <div class="form-group">
                             <label>National ID:</label>
                             <p class="form-control-static fw-bolder">@Model.NationalId</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="form-group">
-                            <label>Name:</label>
-                            <p class="form-control-static fw-bolder">@Model.Name</p>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
